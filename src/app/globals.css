@@ -1,0 +1,225 @@
+@import "tailwindcss";
+
+/* ============================================================
+   Cumplai — identidad "Flame"
+   Claro y minimal · gradiente amarillo→naranja→rojo · tipografía grande
+   ============================================================ */
+
+:root {
+  --bg: #faf8f4;
+  --card: #ffffff;
+  --card-2: #f6f3ec;
+  --sunken: #f2eee5;
+  --fg: #1b1714;
+  --muted: #6f6a61;
+  --faint: #a49e93;
+  --border: rgba(27, 23, 20, 0.1);
+  --border-strong: rgba(27, 23, 20, 0.16);
+  --accent: #f2542d;
+  --accent-2: #ff8a1e;
+  --accent-fg: #1b1006;
+  --accent-soft: rgba(242, 84, 45, 0.09);
+  --grad: linear-gradient(96deg, #ffcf3a 0%, #ff9a1f 34%, #ff662c 66%, #ef3f2e 100%);
+  --ok: #1f9d55;
+  --ok-soft: rgba(31, 157, 85, 0.12);
+  --warn: #c9820a;
+  --warn-soft: rgba(201, 130, 10, 0.14);
+  --danger: #d43f2e;
+  --danger-soft: rgba(212, 63, 46, 0.12);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #15120f;
+    --card: #1d1813;
+    --card-2: #201a15;
+    --sunken: #191411;
+    --fg: #f3efe8;
+    --muted: #a69d90;
+    --faint: #6f675c;
+    --border: rgba(255, 255, 255, 0.09);
+    --border-strong: rgba(255, 255, 255, 0.17);
+    --accent: #ff7a45;
+    --accent-2: #ffab3d;
+    --accent-fg: #1b1006;
+    --accent-soft: rgba(255, 122, 69, 0.14);
+    --grad: linear-gradient(96deg, #ffcf3a 0%, #ff9a1f 34%, #ff662c 66%, #f2432e 100%);
+    --ok: #43c07d;
+    --ok-soft: rgba(67, 192, 125, 0.16);
+    --warn: #e0a53a;
+    --warn-soft: rgba(224, 165, 58, 0.16);
+    --danger: #ff6b57;
+    --danger-soft: rgba(255, 107, 87, 0.16);
+  }
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-card: var(--card);
+  --color-card2: var(--card-2);
+  --color-sunken: var(--sunken);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-accent: var(--accent);
+  --color-accent-2: var(--accent-2);
+  --color-accent-fg: var(--accent-fg);
+  --color-ok: var(--ok);
+  --color-warn: var(--warn);
+  --color-danger: var(--danger);
+  --font-sans: var(--font-sans-f), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-display-f), Georgia, serif;
+  --font-mono: var(--font-mono-f), ui-monospace, monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: color-mix(in oklab, var(--accent) 26%, transparent);
+}
+
+@layer components {
+  .font-display {
+    font-family: var(--font-display);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 0.98;
+  }
+
+  .eyebrow,
+  .label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--faint);
+  }
+  .label {
+    @apply mb-1 block font-medium;
+  }
+
+  .gradient-text {
+    background: var(--grad);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition;
+    cursor: pointer;
+  }
+  .btn:disabled {
+    @apply cursor-not-allowed opacity-50;
+  }
+  .btn-accent {
+    background: var(--grad);
+    color: var(--accent-fg);
+    box-shadow: 0 10px 30px -12px rgba(242, 84, 45, 0.6);
+  }
+  .btn-accent:hover {
+    filter: brightness(1.04) saturate(1.05);
+    transform: translateY(-1px);
+  }
+  .btn-primary {
+    @apply bg-fg text-bg;
+  }
+  .btn-primary:hover {
+    opacity: 0.9;
+  }
+  .btn-ghost {
+    @apply border border-border-strong text-fg;
+  }
+  .btn-ghost:hover {
+    background: color-mix(in oklab, var(--fg) 5%, transparent);
+  }
+  .btn-sm {
+    @apply px-4 py-2 text-xs;
+  }
+
+  .card {
+    @apply rounded-2xl border border-border bg-card;
+    box-shadow: 0 1px 2px rgba(27, 23, 20, 0.04), 0 18px 40px -28px rgba(27, 23, 20, 0.22);
+  }
+  .card-flat {
+    @apply rounded-2xl border border-border bg-card;
+  }
+
+  .input {
+    @apply w-full rounded-xl border border-border-strong px-3.5 py-2.5 text-sm outline-none transition;
+    background: var(--card);
+    color: var(--fg);
+    font-family: var(--font-sans);
+  }
+  .input::placeholder {
+    color: var(--faint);
+  }
+  .input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent) 22%, transparent);
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1 text-xs font-medium;
+  }
+  .chip-accent {
+    background: var(--accent-soft);
+    border-color: transparent;
+    color: var(--accent);
+  }
+
+  .dot {
+    @apply inline-block h-2.5 w-2.5 rounded-full;
+  }
+  .dot-ok { background: var(--ok); }
+  .dot-warn { background: var(--warn); }
+  .dot-danger { background: var(--danger); }
+
+  .badge-ok { background: var(--ok-soft); color: var(--ok); }
+  .badge-warn { background: var(--warn-soft); color: var(--warn); }
+  .badge-danger { background: var(--danger-soft); color: var(--danger); }
+
+  .link {
+    @apply underline decoration-border-strong underline-offset-2 transition hover:decoration-current;
+  }
+}
+
+.grad-orb {
+  background: var(--grad);
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.animate-up {
+  animation: fadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-up {
+    animation: none;
+  }
+  * {
+    scroll-behavior: auto !important;
+  }
+}
