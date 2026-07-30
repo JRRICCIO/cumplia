@@ -1,7 +1,15 @@
 import { NextResponse } from "next/server";
 import { requireClientAccess } from "@/lib/core/session";
 import { requireEntitlement } from "@/lib/core/entitlements";
-import { createSystem, listSystems, type Lifecycle, type SystemRole } from "@/lib/ai-act/systems";
+import {
+  createSystem,
+  listSystems,
+  saveClassification,
+  type Lifecycle,
+  type SystemRole,
+} from "@/lib/ai-act/systems";
+import { evaluate } from "@/lib/ai-act/ruleset";
+import type { Answers } from "@/lib/ai-act/types";
 import { logAudit } from "@/lib/core/audit";
 
 export const runtime = "nodejs";
@@ -61,6 +69,29 @@ export async function POST(
     action: "created",
     summary: `Sistema de IA "${system.name}" añadido al inventario.`,
   });
+
+  // Flujo guiado: si vienen respuestas, clasificamos en el mismo paso.
+  if (body.answers && typeof body.answers === "object") {
+    const result = evaluate(body.answers as Answers);
+    const classification = await saveClassification(
+      system.id,
+      body.answers as Answers,
+      result,
+      access.ctx.email,
+    );
+    await logAudit({
+      orgId: access.ctx.orgId,
+      clientCompanyId: id,
+      actorUserId: access.ctx.userId,
+      actorEmail: access.ctx.email,
+      entityType: "classification",
+      entityId: classification.id,
+      action: "classified",
+      summary: `"${system.name}" clasificado como ${result.riskLabel}.`,
+      payload: { risk: result.riskLevel },
+    });
+    return NextResponse.json({ system, result }, { status: 201 });
+  }
 
   return NextResponse.json({ system }, { status: 201 });
 }

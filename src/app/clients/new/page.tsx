@@ -16,6 +16,7 @@ export default function NewClientPage() {
     contactName: "",
     contactEmail: "",
   });
+  const [more, setMore] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -63,57 +64,68 @@ export default function NewClientPage() {
       <Link href="/dashboard" className="text-sm text-muted hover:text-fg">
         ← {t.nav.dashboard}
       </Link>
-      <h1 className="font-display text-4xl">{t.clients.newTitle}</h1>
+      <div>
+        <h1 className="font-display text-4xl">Nueva empresa</h1>
+        <p className="mt-1 text-sm text-muted">
+          Con el nombre alcanza para empezar. El resto lo podés completar después.
+        </p>
+      </div>
 
       <form onSubmit={handleSubmit} className="card space-y-4 p-6">
         <div>
-          <label className="label">{t.clients.name}</label>
+          <label className="label">Nombre de la empresa</label>
           <input
             className="input"
             value={form.name}
             onChange={(e) => upd("name", e.target.value)}
+            placeholder="Acme S.L."
+            autoFocus
             required
           />
         </div>
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div>
-            <label className="label">{t.clients.nif}</label>
-            <input className="input" value={form.nif} onChange={(e) => upd("nif", e.target.value)} />
+
+        {!more ? (
+          <button
+            type="button"
+            onClick={() => setMore(true)}
+            className="text-sm text-muted hover:text-fg"
+          >
+            + Más datos (opcional)
+          </button>
+        ) : (
+          <div className="space-y-4 border-t border-border pt-4">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <label className="label">{t.clients.nif}</label>
+                <input className="input" value={form.nif} onChange={(e) => upd("nif", e.target.value)} />
+              </div>
+              <div>
+                <label className="label">{t.clients.sector}</label>
+                <input className="input" value={form.sector} onChange={(e) => upd("sector", e.target.value)} />
+              </div>
+            </div>
+            <div>
+              <label className="label">{t.clients.size}</label>
+              <select className="input" value={form.size} onChange={(e) => upd("size", e.target.value)}>
+                <option value="">—</option>
+                <option value="micro">{t.clients.sizeMicro}</option>
+                <option value="pequena">{t.clients.sizePequena}</option>
+                <option value="mediana">{t.clients.sizeMediana}</option>
+                <option value="grande">{t.clients.sizeGrande}</option>
+              </select>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <label className="label">{t.clients.contactName}</label>
+                <input className="input" value={form.contactName} onChange={(e) => upd("contactName", e.target.value)} />
+              </div>
+              <div>
+                <label className="label">{t.clients.contactEmail}</label>
+                <input className="input" type="email" value={form.contactEmail} onChange={(e) => upd("contactEmail", e.target.value)} />
+              </div>
+            </div>
           </div>
-          <div>
-            <label className="label">{t.clients.sector}</label>
-            <input className="input" value={form.sector} onChange={(e) => upd("sector", e.target.value)} />
-          </div>
-        </div>
-        <div>
-          <label className="label">{t.clients.size}</label>
-          <select className="input" value={form.size} onChange={(e) => upd("size", e.target.value)}>
-            <option value="">—</option>
-            <option value="micro">{t.clients.sizeMicro}</option>
-            <option value="pequena">{t.clients.sizePequena}</option>
-            <option value="mediana">{t.clients.sizeMediana}</option>
-            <option value="grande">{t.clients.sizeGrande}</option>
-          </select>
-        </div>
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div>
-            <label className="label">{t.clients.contactName}</label>
-            <input
-              className="input"
-              value={form.contactName}
-              onChange={(e) => upd("contactName", e.target.value)}
-            />
-          </div>
-          <div>
-            <label className="label">{t.clients.contactEmail}</label>
-            <input
-              className="input"
-              type="email"
-              value={form.contactEmail}
-              onChange={(e) => upd("contactEmail", e.target.value)}
-            />
-          </div>
-        </div>
+        )}
 
         {error && (
           <p className="rounded-xl bg-red-500/10 px-3 py-2 text-sm text-red-600 dark:text-red-400">
@@ -122,7 +134,7 @@ export default function NewClientPage() {
         )}
 
         <button type="submit" disabled={busy} className="btn btn-accent w-full">
-          {busy ? t.common.creating : t.clients.create}
+          {busy ? t.common.creating : "Crear y empezar el expediente"}
         </button>
       </form>
     </div>
